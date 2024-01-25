@@ -1,10 +1,10 @@
 <script setup></script>
 
 <template>
-    <div class="">
-        navbar
+    <div class="bg-gray-400 h-full text-white">
+        <router-view></router-view>
     </div>
-    <router-view></router-view>
+    
 </template>
 
 <style scoped></style>
