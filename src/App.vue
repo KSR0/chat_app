@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-    <div class="bg-gray-400 h-full text-white">
+    <div class="h-full text-white bg-blue-950">
         <router-view></router-view>
     </div>
     
