@@ -1,7 +1,8 @@
 <script setup>
 import {ref} from "vue";
 import MessageComponent from "@/components/MessageComponent.vue";
-const messageContent = ref("");
+import AppNavbarComponent from "@/components/AppNavbarComponent.vue";
+const messageContent = ref(""); //ref pour rendre la variable dynamique, permet de mettre a jour la page ds le naviguateur
 const messages = ref([]);
 
 function deleteMessage(id) {
@@ -24,13 +25,14 @@ function addMessage() {
 </script>
 
 <template>
+    <app-navbar-component/>
     <div class="p-4">
         <div v-for="(message, index) in messages" :key="index" class="mb-3">
             <message-component :message="message" @delete="deleteMessage"/>
         </div>
     </div>
     <div class="flex p-4">
-        <textarea v-model="messageContent" name="message" id="message" rows="1" class="text-black"></textarea>
+        <textarea v-model="messageContent" name="message" id="message" rows="1" class="text-black"></textarea> <!-- "v-model" pour lié l'input au messageContent -->
         <button @click="addMessage" class="p-2 ml-1 bg-blue-500 rounded-md">Envoyer</button>
     </div>
 </template>

@@ -1,24 +1,39 @@
 <script setup>
 import AppInputComponent from '@/components/AppInputComponent.vue';
+import router from '@/router';
+import { supabase } from '@/supabase';
+import { ref } from 'vue'
 
-import { reactive } from 'vue';
+const email = ref('')
+const username = ref('')
+const password = ref('')
 
-const {email, username, password} = reactive({
-    email: '',
-    username: '',
-    password: ''
-})
+const signup = async () => {
+    const {error} = await supabase.auth.signUp({
+        email: email.value,
+        password: password.value,
+        options: {
+            data: {username: username.value}
+        }
+    })
+    if (error) {
+        alert(error)    
+    } else {
+        router.push('/')
+    }
+}
+
 </script>
 
 <template>
     <div>
-        <form class="flex flex-col gap-2 p-2 mx-auto max-w-96">
+        <form @submit.prevent="signup" class="flex flex-col gap-2 p-2 mx-auto max-w-96">
             <label for="email">Email</label>
-            <app-input-component v-model="email" type="email" id="email" autocomplete="email"/>
+            <app-input-component v-model="email" type="email" id="email" autocomplete="email" required/>
             <label for="username">Username</label>
-            <app-input-component v-model="username" type="text" id="username" autocomplete="username"/>
-            <label for="passowrd">Mot de passe</label>
-            <app-input-component v-model="password" type="password" id="password" autocomplete="new-password"/>
+            <app-input-component v-model="username" type="text" id="username" autocomplete="username" required/>
+            <label for="password">Mot de passe</label>
+            <app-input-component v-model="password" type="password" id="password" autocomplete="new-password" required/>
             <button type="submit">Créer un compte</button>
         </form>
     </div>

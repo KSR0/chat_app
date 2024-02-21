@@ -1,14 +1,15 @@
+<!-- eslint-disable no-unused-vars -->
 <script setup>
-import { defineProps } from 'vue';
-
 const props = defineProps({
-    modelValue: String
+  modelValue: {
+    type: String,
+    default: ''
+  }
 })
-const emit = defineEmits(['update:modelValue'])
 
 //const value = computed(() => )
 </script>
 
 <template>
-    <input v-bind="$attrs" class="p-2 rounded-md bg-slate-600"> 
+  <input :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" v-bind="$attrs" class="p-2 rounded-md bg-slate-600" />
 </template>
