@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ChatView from '@/views/ChatView.vue'
 import AccountView from '@/views/AccountView.vue'
 import LoginView from '@/views/LoginView.vue'
-import SignupView from '@/views/SignupView.vue'
+import SignUpView from '@/views/SignUpView.vue'
 import { supabase } from '@/supabase'
 
 
@@ -33,7 +33,7 @@ const router = createRouter({
     {
       path: '/signup',
       name: 'signup',
-      component: SignupView
+      component: SignUpView
     },
   ]
 })
