@@ -1,8 +1,10 @@
 <script setup>
 import AppInputComponent from '@/components/AppInputComponent.vue';
-import router from '@/router';
+import { useRouter } from 'vue-router';
 import { supabase } from '@/supabase';
 import { ref } from 'vue'
+
+const router = useRouter()
 
 const email = ref('')
 const username = ref('')

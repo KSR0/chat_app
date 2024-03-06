@@ -1,42 +1,64 @@
 <script setup>
-import {ref} from "vue";
 import MessageComponent from "@/components/MessageComponent.vue";
 import AppNavbarComponent from "@/components/AppNavbarComponent.vue";
+import {onMounted, ref, watchEffect} from "vue";
+import { insertMessage, messages, FetchMessages, SubscribeToMessage } from "@/api/messages";
+import { useUserStore } from "@/stores/user";
+import { storeToRefs } from "pinia";
+
+const { user } = storeToRefs(useUserStore())
+
 const messageContent = ref(""); //ref pour rendre la variable dynamique, permet de mettre a jour la page ds le naviguateur
-const messages = ref([]);
+
+SubscribeToMessage()
+onMounted( async () => {
+    await FetchMessages()
+    scrollToBottom()
+})
 
 function deleteMessage(id) {
     messages.value = messages.value.filter((message) => message.id != id);
 }
 
 function addMessage() {
-    messages.value.push({
-        id: Math.random().toString(36).substring(3),
-        content: messageContent.value,
-        date: new Date().toLocaleDateString(),
-        user: {
-            name: "Moi",
-            avatar: "https://plus.unsplash.com/premium_photo-1666900440561-94dcb6865554?q=80&w=2127&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        }
-    });
-    messageContent.value = "";
+    if (!messageContent.value.trim()) return
+    console.log(messageContent.value.trim())
+    insertMessage(messageContent.value.trim(), user.value.id)
+    messageContent.value = ""
+
+    FetchMessages()
+    scrollToBottom()
 }
+
+const messagesContainer = ref(null)
+
+function scrollToBottom() {
+    messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+}
+
+watchEffect(() => {
+    if (messages.value.length) {
+        scrollToBottom()
+    }
+})
 
 </script>
 
 <template>
-    <app-navbar-component/>
-    <div class="p-4">
-        <div v-for="(message, index) in messages" :key="index" class="mb-3">
-            <message-component :message="message" @delete="deleteMessage"/>
+    <div class="flex flex-col h-full overflow-hidden bg-blue-950">
+        <app-navbar-component/>
+        <div class="p-4 overflow-y-scroll text-2xl grow" ref="messagesContainer">
+            <div v-for="(message, index) in messages" :key="index" class="mb-3">
+                <message-component :message="message" @delete="deleteMessage"/>
+            </div>
         </div>
-    </div>
-    <div class="flex p-4">
-        <textarea v-model="messageContent" name="message" id="message" rows="1" class="text-black"></textarea> <!-- "v-model" pour lié l'input au messageContent -->
-        <button @click="addMessage" class="p-2 ml-1 bg-blue-500 rounded-md">Envoyer</button>
+        <div class="flex p-4">
+            <textarea v-model="messageContent" @keyup.enter.exact="addMessage" name="message" id="message" rows="1" class="p-1 text-2xl text-black border-2 rounded-2xl"></textarea> <!-- "v-model" pour lié l'input au messageContent -->
+            <button @click="addMessage" class="p-3 ml-3 text-2xl bg-blue-500 border-2 rounded-2xl hover:bg-blue-700 hover:border-blue-500">Envoyer</button>
+        </div>
     </div>
 </template>
 
 
 <!-- Extensions google: vue dev tools -->
-<!-- Extensions vscode: ESLint, HeadWind, Material Icon Theme, Prettier, Tailwind, Vue 3 Snippers, Vue Language Feat..., Vue VSCode Snippets -->
+<!-- Extensions vscode: ESLint, HeadWind, Material Icon Theme, Prettier, Tailwind, Vue 3 Snippers, Vue Language Feat..., Vue VSCode Snippets -->@/api/messages
